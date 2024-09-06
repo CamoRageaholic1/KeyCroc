@@ -1,5 +1,5 @@
-# KeyCroc
-KeyCroc Cred Exfil on Screenlock Payload
+# KeyCroc Cred Exfil on Screenlock Payload
+Works with KeyCroc and Ducky
 
 Author: David Osisek
 Version: 1.4
