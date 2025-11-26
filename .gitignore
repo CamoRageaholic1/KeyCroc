@@ -1,0 +1,48 @@
+# Loot and captured data
+/root/loot/
+loot/
+*.dmp
+*.txt
+DumpCreds_*
+
+# Temporary files
+/tmp/www/
+/tmp/smb/
+*.tmp
+*.temp
+
+# Logs
+*.log
+execution_log.txt
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Credentials and sensitive data
+sam
+security
+system
+*.hive
+
+# Backup files
+*.bak
+*.backup
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
