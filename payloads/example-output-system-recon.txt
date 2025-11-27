@@ -1,0 +1,357 @@
+==============================================
+SYSTEM RECONNAISSANCE REPORT
+Generated: 11/26/2025 2:30:22 PM
+==============================================
+
+[SYSTEM INFORMATION]
+Host Name:                 DESKTOP-EXAMPLE
+OS Name:                   Microsoft Windows 10 Pro
+OS Version:                10.0.19045 N/A Build 19045
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Member Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          John Doe
+Registered Organization:   
+Product ID:                00330-80000-00000-AA123
+Original Install Date:     1/15/2024, 9:23:12 AM
+System Boot Time:          11/26/2025, 8:15:43 AM
+System Manufacturer:       Dell Inc.
+System Model:              OptiPlex 7090
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 165 Stepping 2 GenuineIntel ~2900 Mhz
+BIOS Version:              Dell Inc. 2.8.0, 5/12/2023
+Windows Directory:         C:\\Windows
+System Directory:          C:\\Windows\\system32
+Boot Device:               \\Device\\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-05:00) Eastern Time (US & Canada)
+Total Physical Memory:     16,234 MB
+Available Physical Memory: 8,125 MB
+Virtual Memory: Max Size:  18,666 MB
+Virtual Memory: Available: 10,234 MB
+Virtual Memory: In Use:    8,432 MB
+Page File Location(s):     C:\\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\\\DESKTOP-EXAMPLE
+Hotfix(s):                 15 Hotfix(s) Installed.
+                           [01]: KB5032189
+                           [02]: KB5034441
+                           [03]: KB5035849
+                           [04]: KB5036892
+                           [05]: KB5037849
+                           [06]: KB5038089
+                           [07]: KB5039213
+                           [08]: KB5040442
+                           [09]: KB5041578
+                           [10]: KB5042421
+                           [11]: KB5043178
+                           [12]: KB5044033
+                           [13]: KB5045213
+                           [14]: KB5046089
+                           [15]: KB5047213
+
+[NETWORK CONFIGURATION]
+
+Windows IP Configuration
+
+   Host Name . . . . . . . . . . . . : DESKTOP-EXAMPLE
+   Primary Dns Suffix  . . . . . . . : 
+   Node Type . . . . . . . . . . . . : Hybrid
+   IP Routing Enabled. . . . . . . . : No
+   WINS Proxy Enabled. . . . . . . . : No
+   DNS Suffix Search List. . . . . . : home.local
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . : home.local
+   Description . . . . . . . . . . . : Intel(R) Ethernet Connection (2) I219-V
+   Physical Address. . . . . . . . . : 00-1A-2B-3C-4D-5E
+   DHCP Enabled. . . . . . . . . . . : Yes
+   Autoconfiguration Enabled . . . . : Yes
+   IPv4 Address. . . . . . . . . . . : 192.168.1.100(Preferred) 
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Lease Obtained. . . . . . . . . . : Tuesday, November 26, 2025 8:15:50 AM
+   Lease Expires . . . . . . . . . . : Wednesday, November 27, 2025 8:15:50 AM
+   Default Gateway . . . . . . . . . : 192.168.1.1
+   DHCP Server . . . . . . . . . . . : 192.168.1.1
+   DNS Servers . . . . . . . . . . . : 192.168.1.1
+                                       8.8.8.8
+   NetBIOS over Tcpip. . . . . . . . : Enabled
+
+[NETWORK ADAPTERS]
+
+Name                      : Ethernet
+InterfaceDescription      : Intel(R) Ethernet Connection (2) I219-V
+Status                    : Up
+MacAddress                : 00-1A-2B-3C-4D-5E
+LinkSpeed                 : 1 Gbps
+MediaType                 : 802.3
+
+[ROUTING TABLE]
+
+===========================================================================
+Interface List
+  8...00 1a 2b 3c 4d 5e ......Intel(R) Ethernet Connection (2) I219-V
+===========================================================================
+
+IPv4 Route Table
+===========================================================================
+Active Routes:
+Network Destination        Netmask          Gateway       Interface  Metric
+          0.0.0.0          0.0.0.0      192.168.1.1    192.168.1.100     25
+        127.0.0.0        255.0.0.0         On-link         127.0.0.1    331
+        127.0.0.1  255.255.255.255         On-link         127.0.0.1    331
+      192.168.1.0    255.255.255.0         On-link     192.168.1.100    281
+    192.168.1.100  255.255.255.255         On-link     192.168.1.100    281
+===========================================================================
+
+[ARP CACHE]
+
+Interface: 192.168.1.100 --- 0x8
+  Internet Address      Physical Address      Type
+  192.168.1.1           aa-bb-cc-dd-ee-ff     dynamic
+  192.168.1.50          11-22-33-44-55-66     dynamic
+  192.168.1.255         ff-ff-ff-ff-ff-ff     static
+
+[ACTIVE CONNECTIONS]
+
+Active Connections
+
+  Proto  Local Address          Foreign Address        State           PID
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       1024
+  TCP    0.0.0.0:445            0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:5040           0.0.0.0:0              LISTENING       5800
+  TCP    192.168.1.100:139      0.0.0.0:0              LISTENING       4
+  TCP    192.168.1.100:52341    40.90.189.152:443      ESTABLISHED     3456
+  TCP    192.168.1.100:52342    172.217.14.206:443     ESTABLISHED     2890
+
+[DNS CACHE]
+
+    Record Name . . . . . : www.google.com
+    Record Type . . . . . : 1
+    Time To Live  . . . . : 235
+    Data Length . . . . . : 4
+    Section . . . . . . . : Answer
+    A (Host) Record . . . : 142.250.185.36
+
+    Record Name . . . . . : github.com
+    Record Type . . . . . : 1
+    Time To Live  . . . . : 45
+    Data Length . . . . . : 4
+    Section . . . . . . . : Answer
+    A (Host) Record . . . : 140.82.113.4
+
+[RUNNING PROCESSES]
+
+ProcessName       CPU(s)     PM(M)      Id
+-----------       ------     -----      --
+chrome            45.23      512.45     4532
+code              23.12      387.23     5621
+explorer          12.45      156.78     2341
+Teams             8.92       234.56     3782
+Outlook           5.67       189.34     4123
+powershell        2.34       67.89      6789
+svchost           1.23       45.67      1024
+
+[INSTALLED SOFTWARE]
+
+DisplayName                          DisplayVersion    Publisher
+-----------                          --------------    ---------
+Google Chrome                        120.0.6099.129    Google LLC
+Microsoft Office Professional 2019  16.0.16827.20166  Microsoft Corporation
+Visual Studio Code                   1.85.1            Microsoft Corporation
+7-Zip                                23.01             Igor Pavlov
+Adobe Acrobat Reader DC              23.006.20360      Adobe Inc.
+Microsoft Teams                      1.6.00.32261      Microsoft Corporation
+
+[ENVIRONMENT VARIABLES]
+
+Name                           Value
+----                           -----
+COMPUTERNAME                   DESKTOP-EXAMPLE
+OS                             Windows_NT
+PATH                           C:\\Windows\\system32;C:\\Windows;C:\\Program Files\\Git\\cmd
+PROCESSOR_ARCHITECTURE         AMD64
+PROCESSOR_IDENTIFIER           Intel64 Family 6 Model 165 Stepping 2, GenuineIntel
+PROCESSOR_LEVEL                6
+TEMP                           C:\\Users\\JohnDoe\\AppData\\Local\\Temp
+TMP                            C:\\Users\\JohnDoe\\AppData\\Local\\Temp
+USERNAME                       JohnDoe
+USERPROFILE                    C:\\Users\\JohnDoe
+
+[CURRENT USER]
+
+USER INFORMATION
+----------------
+
+User Name                  SID
+========================== ============================================
+desktop-example\\johndoe    S-1-5-21-123456789-123456789-123456789-1001
+
+
+GROUP INFORMATION
+-----------------
+
+Group Name                             Type             SID          
+====================================== ================ =============
+Everyone                               Well-known group S-1-1-0       
+BUILTIN\\Users                          Alias            S-1-5-32-545
+NT AUTHORITY\\INTERACTIVE               Well-known group S-1-5-4      
+NT AUTHORITY\\Authenticated Users       Well-known group S-1-5-11     
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                    State
+============================= ============================== ========
+SeShutdownPrivilege           Shut down the system          Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking      Enabled
+SeUndockPrivilege             Remove computer from docking  Disabled
+SeIncreaseWorkingSetPrivilege Increase a process working set Disabled
+
+[LOCAL USERS]
+
+User accounts for \\\\DESKTOP-EXAMPLE
+
+-------------------------------------------------------------------------------
+Administrator            Guest                    JohnDoe
+The command completed successfully.
+
+[LOCAL GROUPS]
+
+Aliases for \\\\DESKTOP-EXAMPLE
+
+-------------------------------------------------------------------------------
+*Administrators
+*Backup Operators
+*Guests
+*Power Users
+*Remote Desktop Users
+*Users
+
+[DOMAIN INFORMATION]
+
+(Not domain-joined)
+
+[SCHEDULED TASKS]
+
+TaskName                                 Next Run Time          Status
+======================================== ====================== ===============
+\\Microsoft\\Windows\\UpdateOrchestrator\\Schedule Scan  11/27/2025 3:00:00 AM  Ready
+\\Microsoft\\Windows\\Defrag\\ScheduledDefrag            11/30/2025 1:00:00 AM  Ready
+
+[RUNNING SERVICES]
+
+Status   Name               DisplayName
+------   ----               -----------
+Running  Dhcp               DHCP Client
+Running  Dnscache           DNS Client
+Running  EventLog           Windows Event Log
+Running  LanmanWorkstation  Workstation
+Running  MpsSvc             Windows Defender Firewall
+Running  WinDefend          Windows Defender Antivirus Service
+
+[STARTUP PROGRAMS]
+
+Name        : OneDrive
+Command     : \"C:\\Users\\JohnDoe\\AppData\\Local\\Microsoft\\OneDrive\\OneDrive.exe\" /background
+Location    : HKU\\S-1-5-21-123456789-123456789-123456789-1001\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run
+
+Name        : Microsoft Teams
+Command     : C:\\Users\\JohnDoe\\AppData\\Local\\Microsoft\\Teams\\Update.exe --processStart \"Teams.exe\" --process-start-args \"--system-initiated\"
+Location    : HKU\\S-1-5-21-123456789-123456789-123456789-1001\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run
+
+[FIREWALL STATUS]
+
+Domain Profile Settings:
+----------------------------------------------------------------------
+State                                 ON
+Firewall Policy                      BlockInbound,AllowOutbound
+
+Private Profile Settings:
+----------------------------------------------------------------------
+State                                 ON
+Firewall Policy                      BlockInbound,AllowOutbound
+
+Public Profile Settings:
+----------------------------------------------------------------------
+State                                 ON
+Firewall Policy                      BlockInbound,AllowOutbound
+
+[NETWORK SHARES]
+
+Share name   Resource                        Remark
+-------------------------------------------------------------------------------
+C$           C:\\                             Default share
+IPC$                                         Remote IPC
+ADMIN$       C:\\Windows                      Remote Admin
+
+[POWERSHELL HISTORY]
+
+ipconfig
+cd C:\\Users\\JohnDoe\\Documents
+git clone https://github.com/example/repo.git
+dir
+
+[ANTIVIRUS]
+
+displayName      : Windows Defender
+instanceGuid     : {D68DDC3A-831F-4fae-9E44-DA132C1ACF46}
+pathToSignedProductExe : windowsdefender://
+pathToSignedReportingExe : %ProgramFiles%\\Windows Defender\\MsMpeng.exe
+productState     : 397568
+timestamp        : Tue, 26 Nov 2025 14:30:15 GMT
+
+[WINDOWS DEFENDER]
+
+AMEngineVersion                  : 1.1.24100.4
+AMProductVersion                 : 4.18.24090.11
+AMRunningMode                    : Normal
+AMServiceEnabled                 : True
+AMServiceVersion                 : 4.18.24090.11
+AntispywareEnabled               : True
+AntispywareSignatureAge          : 0
+AntispywareSignatureLastUpdated  : 11/26/2025 8:30:15 AM
+AntispywareSignatureVersion      : 1.407.2192.0
+AntivirusEnabled                 : True
+AntivirusSignatureAge            : 0
+AntivirusSignatureLastUpdated    : 11/26/2025 8:30:15 AM
+AntivirusSignatureVersion        : 1.407.2192.0
+BehaviorMonitorEnabled           : True
+ComputerState                    : 0
+IoavProtectionEnabled            : True
+IsTamperProtected                : True
+NISEnabled                       : True
+NISEngineVersion                 : 1.1.24100.4
+NISSignatureAge                  : 0
+NISSignatureLastUpdated          : 11/26/2025 8:30:15 AM
+NISSignatureVersion              : 1.407.2192.0
+OnAccessProtectionEnabled        : True
+QuickScanAge                     : 1
+QuickScanEndTime                 : 11/25/2025 11:42:15 PM
+QuickScanStartTime               : 11/25/2025 11:38:42 PM
+RealTimeProtectionEnabled        : True
+RealTimeScanDirection            : 0
+PSComputerName                   :
+
+[RECENT DOCUMENTS]
+
+Name                                 LastWriteTime
+----                                 -------------
+project-plan.docx.lnk               11/26/2025 1:45:23 PM
+budget-2025.xlsx.lnk                11/25/2025 4:32:11 PM
+presentation.pptx.lnk               11/24/2025 2:18:45 PM
+
+[USB DEVICE HISTORY]
+
+FriendlyName                                Mfg
+------------                                ---
+USB Mass Storage Device                     SanDisk
+Logitech USB Keyboard                       Logitech
+USB Composite Device                        Generic
+
+==============================================
+RECONNAISSANCE COMPLETE
+==============================================
